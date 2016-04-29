@@ -88,6 +88,37 @@ In this example, TJSON will skip the property called 'dontSerialize':
     public function TJ_noEncode():Array<String>{
         return ['dontSerialize'];
     }
+    
+ 
+Use in external JS code (this fork only)
+------------------------------------
+
+In this example, TJSON can be used externally for other classes outside of Haxe. 
+I haven't tested this fully yet to be considered robust, though.
+
+	<script>
+	
+
+	 // tjson.TJSON is exposed to global scope for Javascript generic use in this fork
+	 
+  	// Make sure you assign the property "_hxcls" to any specific classes (in global scope outside of Haxe) you wish to have parsed as custom objects!
+	 
+	 Person = function() {
+	 	
+	 	this._hxcls = "Person";  // important! boilerplate declaration required for class instances you create in vanilla Javascript!
+	 	
+		this.a = "1";
+		this.b = "Ajtroawjwa";
+		
+	 }
+	 Person.prototype.sayHello =  function() { };
+	 
+	 var p = new Person();
+	 var str=  tjson.TJSON.encode(p);
+	 var parsedObj= tjson.TJSON.parse(str);
+	 console.log("::::",parsedObj.sayHello );  // still intact!
+	 
+	</script>
 
 
 License
