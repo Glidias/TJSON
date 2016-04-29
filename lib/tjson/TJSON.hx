@@ -2,6 +2,7 @@
 package tjson;
 using StringTools;
 
+@:expose
 class TJSON {    
 	public static var OBJECT_REFERENCE_PREFIX = "@~obRef#";
 	/**
@@ -94,7 +95,16 @@ class TJSONParser{
 					o = Date.fromTime(Std.parseInt(v.substr(5)));
 				} else {
 					var cls =Type.resolveClass(v);
-					if(cls==null) throw "Invalid class name - "+v;
+					if (cls == null) {
+						#if js 
+						cls = js.Lib.eval("window['"+v+"']");
+						if (cls == null) {
+							throw "Could not resolve Javascript class - "+v;
+						}
+						#else 
+							throw "Invalid class name - "+v;
+						#end
+					}
 					o = Type.createEmptyInstance(cls);
 				}
 				cache.pop();
@@ -607,7 +617,3 @@ class FancyStyle implements EncodeStyle{
 	}
 	
 }
-
-
-
-
